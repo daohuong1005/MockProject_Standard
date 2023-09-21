@@ -1,0 +1,598 @@
+﻿@model ABSD.Application.ViewModels.ServiceViewModel; 
+@{
+	ViewData["Title"] = "Create";
+}
+@section Css{
+	<style>
+		.vertical-divided {
+			display: inline-block;
+			height: .75rem;
+			width: 1px;
+			background-color: #c1bfbf;
+			margin: 0 .5rem;
+		}
+
+		.label-filter {
+			color: #004292;
+			font-size: .875rem;
+			font-weight: 700;
+			font-family: sans-serif;
+			cursor: pointer;
+			margin-bottom: 0;
+		}
+
+			.label-filter.active {
+				color: #5795e0;
+			}
+
+		.btnCreate {
+			border: 1px solid #e4e4e4;
+			padding: 0.125rem 1rem;
+			background: linear-gradient( 0deg, #dcdcdc, #ffffff00);
+			font-size: .875rem;
+			margin-right: 1rem;
+		}
+
+		.btnCoppy {
+			border: 1px solid #e4e4e4;
+			padding: 0.125rem 1rem;
+			background: linear-gradient( 0deg, #dcdcdc, #ffffff00);
+			font-size: .875rem;
+			margin-right: 1rem;
+		}
+
+		.table tbody tr:nth-of-type(even) {
+			background-color: rgb(242,247,255);
+		}
+
+		.txt-pageNumber {
+			height: 24px;
+			width: 40px;
+			margin: 0 .25rem;
+			padding: .25rem;
+			border: 1px solid #ccc;
+			border-radius: 0;
+			font-size: .875rem;
+			outline: none !important;
+		}
+
+		.pagination {
+			width: fit-content;
+			margin-left: auto;
+			border: 1px solid #c1bfbf;
+		}
+
+			.pagination .page-item {
+				outline: none !important;
+			}
+
+				.pagination .page-item i {
+					color: rgb(58,58,58);
+				}
+	</style>
+}
+
+<div class="container">
+	<div class="card">
+		<div class="card-header">
+			<h5>Service Details</h5>
+		</div>
+
+		<div class="card-body" id="serviceTab">
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link active" id="details1-tab" data-toggle="tab" href="#details1" role="tab" aria-controls="home" aria-selected="true">Details 1</a>
+				</li>
+				<li class="nav-item d-none" id="fundingtabs">
+					<a class="nav-link" id="funding-tab" data-toggle="tab" href="#fundfing" role="tab" aria-controls="profile" aria-selected="false">Funding</a>
+				</li>
+				<li class="nav-item">
+					<button type="button" class="btn custom-btn" id="btnSaveService">Save</button>
+				</li>
+				<li class="nav-item">
+					<button type="button" class="btn custom-btn" id="btnBackService">Back</button>
+				</li>
+			</ul>
+			<div class="tab-content" id="myTabContent">
+				<div class="tab-pane fade show active" id="details1" role="tabpanel" aria-labelledby="details1-tab">
+					<div class="row">
+						<input type="hidden" class="d-none" id="serviceId" value="" />
+						<div class="col-6 mt-2">
+							<div class="form-group row ">
+								<label for="serviceName" class=" control-label">Service Name <small class="text-danger">*</small></label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" id="serviceName" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row">
+								<label for="serviceActive" class="col-sm-3 col-form-label">Service Active</label>
+								<input type="checkbox" class="mt-3" id="serviceActive" value="">
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row">
+								<label for="shortDescription" class="col-sm-3 col-form-label">Service Short Description <small class="text-danger">*</small></label>
+								<div class="col-sm-5">
+									<textarea class="form-control" id="shortDescription" rows="3"></textarea>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<label for="fullDescription" class="col-sm-3 col-form-label">Service Full Description </label>
+								<div class="col-sm-5">
+									<textarea class="form-control" id="fullDescription" rows="3"></textarea>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<label for="subType" class="col-sm-3 col-form-label">Sub Type</label>
+								<div class="col-sm-5">
+									<select class="form-control" id="subTypeSelected">
+										<option value="-1" selected>Please select</option>
+										<option value="1">Independently Funded</option>
+										<option value="2">Contract</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<label for="deptCode" class="col-sm-3 col-form-label">Dept Code <small class="text-danger">*</small></label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" id="deptCode" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<label for="leadContact" class="col-sm-3 col-form-label">Lead Contact <small class="text-danger">*</small></label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" id="leadContact" value=""> <a href="#" id="leadContact">Lookup</a>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<label for="serviceType" class="col-sm-3 col-form-label">Service Type <small class="text-danger">*</small></label>
+								<div class="col-sm-5">
+									<select class="form-control" id="serviceType">
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<label for="clientDescription" class="col-sm-3 col-form-label">Client Description <small class="text-danger">*</small></label>
+								<div class="col-sm-5">
+									<textarea class="form-control" id="clientDescription" rows="3"></textarea>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<label for="descriptionDelivery" class="col-sm-3 col-form-label">Service Description Delivery </label>
+								<div class="col-sm-5">
+									<textarea class="form-control" id="descriptionDelivery" rows="3"></textarea>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<label for="serviceAttendance" class="col-sm-3 col-form-label">Service Attendance</label>
+								<div class="col-sm-5">
+									<select class="form-control" id="serviceAttendance">
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<label for="contractCode" class="col-sm-3 col-form-label">Contract Code </label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" id="contractCode" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<label for="startExpected" class="col-sm-3 col-form-label">Service Start Expected </label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" id="startExpected" value="" placeholder="<dd/MM/yyyy>">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<label for="contractValue" class="col-sm-3 col-form-label">Contract Value </label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" id="contractValue" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<label for="startDate" class="col-sm-3 col-form-label">Service Start Date </label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" id="startDate" value="" placeholder="<dd/MM/yyyy>">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<label for="contractStagedPayment" class="col-sm-3 col-form-label">Contract Staged Payment </label>
+								<div class="col-sm-5">
+									<input type="checkbox" class="mt-3" id="contractStagedPayment" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<label for="endDate" class="col-sm-3 col-form-label">Service End Date </label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" id="endDate" value="" placeholder="<dd/MM/yyyy>">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<label for="referralProcess" class="col-sm-3 col-form-label">Referral Process</label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" id="referralProcess" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<label for="entendable" class="col-sm-3 col-form-label">Service Extendable </label>
+								<input type="checkbox" class="mt-3" id="entendable" value="" onclick="CheckedEndable()">
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<label for="timeLimited" class="col-sm-3 col-form-label">Service Time Limited </label>
+								<input type="checkbox" class="mt-3" id="timeLimited" value="" onclick="CheckedLimited()">
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<div class="col-3 ">
+									<input type="number" disabled class="form-control" id="entendableYear" value="">
+									<label>Years</label>
+								</div>
+								<div class="col-3">
+									<input type="number" disabled class="form-control" id="entendableMonth" value="">
+									<label>Months</label>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row mx-0">
+								<div class="col-3">
+									<input type="number" disabled class="form-control" id="limitedYear" value="">
+									<label>Years</label>
+								</div>
+								<div class="col-3">
+									<input type="number" disabled class="form-control" id="limitedMonth" value="">
+									<label>Months</label>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="tab-pane fade" id="fundfing" role="tabpanel" aria-labelledby="funding-tab">
+					<div class="row">
+						<input type="hidden" class="d-none" id="fundingId" value="" />
+						
+						<div class="col-6 mt-2">
+							<div class="form-group row">
+								<label for="fundingSource" class="col-sm-3 col-form-label">Funding Source</label>
+								<div class="col-sm-5">
+									<input type="number" class="form-control" id="fundingSource" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6 mt-2">
+							<div class="form-group row ">
+								<label>Funding Needs</label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" id="fundingNeed" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row ">
+								<label>Funding Contact Details</label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" id="contactDetails" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row ">
+								<label>Funding Continuation Needed</label>
+								<div class="col-sm-5">
+									<input type="checkbox" id="continuationNeeded" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row ">
+								<label>Funding Amount</label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" id="fundingAmount" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row ">
+								<label>Funding Continuation Amount</label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" id="continuationAmount" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row">
+								<label>Funding Start</label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" id="fundingStart" placeholder="<dd/MM/yyyy>" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row">
+								<label>Funding Continuation Details</label>
+								<div class="col-sm-5">
+									<textarea class="form-control" rows="3" id="continuationDetails"></textarea>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row">
+								<label>Funding End</label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" id="fundingEnd" placeholder="<dd/MM/yyyy>" value="">
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="row">
+						<div class="col-6">
+							<div class="form-group row">
+								<label>Fundraising For Text</label>
+								<div class="col-sm-5">
+									<textarea class="form-control" id="fundraisingForText" rows="3"></textarea>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row">
+								<label>Fundraising Needs</label>
+								<div class="col-sm-5">
+									<input type="checkbox" id="fundraisingNeeds" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row">
+								<label>Fundraising Why</label>
+								<div class="col-sm-5">
+									<textarea class="form-control" id="fundraisingWhy"></textarea>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row">
+								<label>Fundraising Required By</label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" placeholder="<dd/MM/yyyy>" id="fundraisingRequiredBy" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row">
+								<label>Fundraising Complete</label>
+								<div class="col-sm-5">
+									<input type="checkbox" id="fundraisingComplete" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row">
+								<label>Fundraising Complete Date</label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" placeholder="<dd/MM/yyyy>" id="fundraisingCompleteDate" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row">
+								<label>Fundraising Donor Anonymous</label>
+								<div class="col-sm-5">
+									<input type="checkbox" class="form-control" id="fundraisingDonorAnonymous" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row">
+								<label>Fundraising Donation Date</label>
+								<div class="col-sm-5">
+									<input type="text class="form-control" placeholder="<dd/MM/yyyy>" id="fundraisingDonationDate" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row">
+								<label>Fundraising Donor Amount</label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" id="fundraisingDonorAmount" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group row">
+								<label>Fundraising Donation Incremental</label>
+								<div class="col-sm-5">
+									<input type="checkbox" class="form-control" id="fundraisingDonationIncremental" value="">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="card-footer">
+
+		</div>
+	</div>
+</div>
+
+
+@section modal{
+	<div class="modal fade" id="contactModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog" style="max-width:920px">
+			<div class="modal-content">
+				<div class="modal-header border-0">
+					<h5 class="modal-title" id="staticBackdropLabel">List Contact</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="row mx-0 top mb-2">
+						<div class="col-md-3 d-flex align-items-center action">
+							<div class="form-group form-check d-flex align-items-center mb-0">
+								<input type="checkbox" class="form-check-input" id="cbIncludeInActive">
+								<label class="form-check-label" for="cbIncludeInActive">Include In-active</label>
+							</div>
+						</div>
+					</div>
+					<div>
+						<table class="table table-bordered" id="table-contacts">
+							<thead>
+								<tr>
+									<th></th>
+									<th>Contact Name</th>
+									<th>Mobile Phone</th>
+									<th>Email</th>
+									<th>Contact Type</th>
+									<th>Is Active?</th>
+
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+						<div class="pagination justify-content-end align-items-center p-1">
+							<button class="page-item border-0 bg-white disabled" id="btnFirstPage"><i class="fas fa-angle-double-left"></i></button>
+							<button class="page-item border-0 bg-white disabled" id="btnPreviousPage"><i class="fas fa-angle-left"></i></button>
+							<div class="vertical-divided"></div>
+							Page
+							<input class="txt-pageNumber" value="1" />
+							of
+							<span class=" ml-2 totalPage">1</span>
+							<div class="vertical-divided"></div>
+							<button class="page-item border-0 bg-white" id="btnNextPage"><i class="fas fa-angle-right"></i></button>
+							<button class="page-item border-0 bg-white" id="btnLastPage"><i class="fas fa-angle-double-right"></i></button>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer border-0 d-block">
+					<button class="btn btn-custom btnSelectContact">Select</button>
+					<button class="btn btn-custom">Close</button>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+}
+
+
+@section Scripts{
+
+	<script src="~/js/service/create.js"></script>
+
+
+	<script>
+		var service = new createServiceController();
+		service.initializer();
+	</script>
+	<script>
+		function CheckedEndable() {
+			var remember = document.querySelector('#entendable');
+			var extendableYear = document.querySelector('#entendableYear');
+			var entendableMonth = document.querySelector('#entendableMonth');
+			if (remember.checked) {
+				extendableYear.disabled = false;
+				entendableMonth.disabled = false;
+			}
+			else {
+				extendableYear.disabled = true;
+				entendableMonth.disabled = true;
+			}
+		}
+
+		function CheckedLimited() {
+			var remember = document.querySelector('#timeLimited');
+			var limitedYear = document.querySelector('#limitedYear');
+			var limtedMonth = document.querySelector('#limitedMonth');
+			if (remember.checked) {
+				limitedYear.disabled = false;
+				limtedMonth.disabled = false;
+			}
+			else {
+				limitedYear.disabled = true;
+				limtedMonth.disabled = true;
+			}
+		}
+	</script>
+}

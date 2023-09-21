@@ -1,0 +1,322 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+@section Css{
+    <style>
+        .vertical-divided {
+            display: inline-block;
+            height: .75rem;
+            width: 1px;
+            background-color: #c1bfbf;
+            margin: 0 .5rem;
+        }
+
+        .label-filter {
+            color: #004292;
+            font-size: .875rem;
+            font-weight: 700;
+            font-family: sans-serif;
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+
+            .label-filter.active {
+                color: #5795e0;
+            }
+
+        .table tbody tr:nth-of-type(even) {
+            background-color: rgb(242,247,255);
+        }
+
+        .txt-pageNumber {
+            height: 24px;
+            width: 40px;
+            margin: 0 .25rem;
+            padding: .25rem;
+            border: 1px solid #ccc;
+            border-radius: 0;
+            font-size: .875rem;
+            outline: none !important;
+        }
+
+        .pagination {
+            width: fit-content;
+            margin-left: auto;
+            border: 1px solid #c1bfbf;
+        }
+
+            .pagination .page-item {
+                outline: none !important;
+            }
+
+                .pagination .page-item i {
+                    color: rgb(58,58,58);
+                }
+
+        .modal {
+            font-size: .875rem;
+        }
+
+            .modal .modal-body .tab-content {
+                border-right: 1px solid #dee2e6;
+                border-bottom: 1px solid #dee2e6;
+                border-left: 1px solid #dee2e6;
+            }
+
+        .form-control.error {
+            border: 2px solid red;
+        }
+
+        .nav-tabs .nav-link {
+            border-color: #dee2e6;
+            color: #495057;
+        }
+
+        #districtModal {
+            background-color: #42424280;
+        }
+    </style>
+}
+
+<h1>Trust Region List</h1>
+<div class="mt-3">
+    <div class="row mx-0 top mb-2">
+        <div class="col-md-8 filter">
+            <label class="region label-filter active" data-type="0">All</label>
+            <div class="vertical-divided"></div>
+            <label class="region label-filter" data-type="1">0 - 9</label>
+            <div class="vertical-divided"></div>
+            <label class="region label-filter" data-type="2">A B C D E</label>
+            <div class="vertical-divided"></div>
+            <label class="region label-filter" data-type="3">F G H I J</label>
+            <div class="vertical-divided"></div>
+            <label class="region label-filter" data-type="4">K L M N</label>
+            <div class="vertical-divided"></div>
+            <label class="region label-filter" data-type="5">O P Q R</label>
+            <div class="vertical-divided"></div>
+            <label class="region label-filter" data-type="6">S T U V</label>
+            <div class="vertical-divided"></div>
+            <label class="region label-filter" data-type="7">W X Y Z</label>
+        </div>
+        <div class="col-md-4 d-flex align-items-center justify-content-md-end">
+            <button class="btn custom-btn" id="btnCreateRegion">Create</button>
+            <div class="form-group form-check d-flex align-items-center mb-0">
+                <input type="checkbox" class="form-check-input" id="cbIncludeInActiveRegion">
+                <label class="form-check-label" for="cbIncludeInActiveRegion">Include In-active</label>
+            </div>
+        </div>
+    </div>
+    <div>
+        <table class="table table-bordered" id="table-regions">
+            <thead>
+                <tr>
+                    <th>Trust Region Name</th>
+                    <th>Description</th>
+                    <th>Nation/Country</th>
+                    <th>Is Active?</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div class="pagination justify-content-end align-items-center p-1">
+            <button class="page-item border-0 bg-white disabled" id="btnFirstPageRegion"><i class="fas fa-angle-double-left"></i></button>
+            <button class="page-item border-0 bg-white disabled" id="btnPrevPageRegion"><i class="fas fa-angle-left"></i></button>
+            <div class="vertical-divided"></div>
+            Page
+            <input class="txt-pageNumber region" value="1" />
+            of
+            <span class=" ml-2 totalPageRegion">1</span>
+            <div class="vertical-divided"></div>
+            <button class="page-item border-0 bg-white" id="btnNextPageRegion"><i class="fas fa-angle-right"></i></button>
+            <button class="page-item border-0 bg-white" id="btnLastPageRegion"><i class="fas fa-angle-double-right"></i></button>
+        </div>
+    </div>
+</div>
+
+@section modal{
+    <div class="modal fade" id="regionModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" style="max-width:920px">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="staticBackdropLabel">Trust Region Details</h5>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item tab-details" role="presentation">
+                            <a class="nav-link active" data-toggle="tab" href="#details" role="tab" aria-selected="true">Details</a>
+                        </li>
+                        <li class="nav-item tab-districts" role="presentation">
+                            <a class="nav-link" data-toggle="tab" href="#trustDistricts" role="tab" aria-selected="false">Trust Districts</a>
+                        </li>
+                        <li class="nav-item ml-auto">
+                            <button type="button" class="btn custom-btn" id="btnInActiveRegion">In-active</button>
+                        </li>
+                        <li class="nav-item">
+                            <button type="button" class="btn custom-btn" id="btnSaveRegion">Save</button>
+                        </li>
+                        <li class="nav-item">
+                            <button type="button" class="btn custom-btn" id="btnBackRegion">Back</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content p-2">
+                        <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
+                            <div class="p-2" style="border:1px solid #dee2e6">
+                                <input type="hidden" class="d-none" id="regionId" value="" />
+                                <div class="form-group row mx-0">
+                                    <label for="country" class="col-sm-3 col-form-label">Nation/Country <small class="text-danger">*</small></label>
+                                    <div class="col-sm-5">
+                                        <select class="form-control" id="countryId">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row mx-0">
+                                    <label for="regionName" class="col-sm-3 col-form-label">Trust Region Name <small class="text-danger">*</small></label>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" id="regionName" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group row mx-0">
+                                    <label for="description" class="col-sm-3 col-form-label">Desciption</label>
+                                    <div class="col-sm-5">
+                                        <textarea class="form-control" id="description" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="trustDistricts" role="tabpanel" aria-labelledby="districts-tab">
+                            <div class="mt-3">
+                                <div class="row mx-0 top mb-2">
+                                    <div class="col-md-8 filter">
+                                        <label class="district label-filter active" data-type="0">All</label>
+                                        <div class="vertical-divided"></div>
+                                        <label class="district label-filter" data-type="1">0 - 9</label>
+                                        <div class="vertical-divided"></div>
+                                        <label class="district label-filter" data-type="2">A B C D E</label>
+                                        <div class="vertical-divided"></div>
+                                        <label class="district label-filter" data-type="3">F G H I J</label>
+                                        <div class="vertical-divided"></div>
+                                        <label class="district label-filter" data-type="4">K L M N</label>
+                                        <div class="vertical-divided"></div>
+                                        <label class="district label-filter" data-type="5">O P Q R</label>
+                                        <div class="vertical-divided"></div>
+                                        <label class="district label-filter" data-type="6">S T U V</label>
+                                        <div class="vertical-divided"></div>
+                                        <label class="district label-filter" data-type="7">W X Y Z</label>
+                                    </div>
+                                    <div class="col-md-4 d-flex align-items-center justify-content-md-end action">
+                                        <button class="btn custom-btn" id="btnCreateDistrict">Create</button>
+                                        <div class="form-group form-check d-flex align-items-center mb-0">
+                                            <input type="checkbox" class="form-check-input" id="cbIncludeInActiveDistrict">
+                                            <label class="form-check-label" for="cbIncludeInActiveDistrict">Include In-active</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <table class="table table-bordered" id="table-districts">
+                                        <thead>
+                                            <tr>
+                                                <th>District Name</th>
+                                                <th>Description</th>
+                                                <th>Region</th>
+                                                <th>Is Active?</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                    <div class="pagination justify-content-end align-items-center p-1">
+                                        <button class="page-item border-0 bg-white disabled" id="btnFirstPageDistrict"><i class="fas fa-angle-double-left"></i></button>
+                                        <button class="page-item border-0 bg-white disabled" id="btnPrevPageDistrict"><i class="fas fa-angle-left"></i></button>
+                                        <div class="vertical-divided"></div>
+                                        Page
+                                        <input class="txt-pageNumber district" value="1" />
+                                        of
+                                        <span class=" ml-2 totalPageDistrict">1</span>
+                                        <div class="vertical-divided"></div>
+                                        <button class="page-item border-0 bg-white" id="btnNextPageDistrict"><i class="fas fa-angle-right"></i></button>
+                                        <button class="page-item border-0 bg-white" id="btnLastPageDistrict"><i class="fas fa-angle-double-right"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 d-block">
+                    <div class="text-danger country-error"></div>
+                    <div class="text-danger regionName-error"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="districtModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" style="max-width:600px;">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="staticBackdropLabel">Trust District Details</h5>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item details" role="presentation">
+                            <a class="nav-link active" data-toggle="tab" href="#details" role="tab" aria-selected="true">Details</a>
+                        </li>
+                        <li class="nav-item ml-auto">
+                            <button type="button" class="btn custom-btn" id="btnInActiveDistrict">In-active</button>
+                        </li>
+                        <li class="nav-item">
+                            <button type="button" class="btn custom-btn" id="btnSaveDistrict">Save</button>
+                        </li>
+                        <li class="nav-item">
+                            <button type="button" class="btn custom-btn" id="btnBackDistrict">Back</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content p-2">
+                        <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
+                            <div class="p-2" style="border:1px solid #dee2e6">
+                                <input type="hidden" class="d-none" id="districtId" value="" />
+                                <div class="form-group row mx-0">
+                                    <label for="country" class="col-sm-4 col-form-label">Trust Region Name</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" id="region" data-id="" value="" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group row mx-0">
+                                    <label for="districtName" class="col-sm-4 col-form-label">Trust District Name <small class="text-danger">*</small></label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" id="districtName" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group row mx-0">
+                                    <label for="districtDescription" class="col-sm-4 col-form-label">Desciption</label>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" id="districtDescription" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 d-block">
+                        <div class="text-danger districtName-error"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts{
+    <script src="~/js/district/district.js"></script>
+    <script src="~/js/region/region.js"></script>
+
+    <script>
+        var district = new districtController();
+        district.initializer();
+
+        var region = new regionController();
+        region.initializer();
+    </script>
+}

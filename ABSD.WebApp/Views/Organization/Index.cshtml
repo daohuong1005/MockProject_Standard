@@ -1,0 +1,143 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+@section Css{
+    <style>
+        .vertical-divided {
+            display: inline-block;
+            height: .75rem;
+            width: 1px;
+            background-color: #c1bfbf;
+            margin: 0 .5rem;
+        }
+
+        .label-filter {
+            color: #004292;
+            font-size: .875rem;
+            font-weight: 700;
+            font-family: sans-serif;
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+
+            .label-filter.active {
+                color: #5795e0;
+            }
+
+        .table tbody tr:nth-of-type(even) {
+            background-color: rgb(242,247,255);
+        }
+
+        .txt-pageNumber {
+            height: 24px;
+            width: 40px;
+            margin: 0 .25rem;
+            padding: .25rem;
+            border: 1px solid #ccc;
+            border-radius: 0;
+            font-size: .875rem;
+            outline: none !important;
+        }
+
+        .pagination {
+            width: fit-content;
+            margin-left: auto;
+            border: 1px solid #c1bfbf;
+        }
+
+            .pagination .page-item {
+                outline: none !important;
+            }
+
+                .pagination .page-item i {
+                    color: rgb(58,58,58);
+                }
+
+        .modal .modal-body .tab-content {
+            border-right: 1px solid #dee2e6;
+            border-bottom: 1px solid #dee2e6;
+            border-left: 1px solid #dee2e6;
+        }
+
+        .form-control.error {
+            border: 2px solid red;
+        }
+
+        .nav-tabs .nav-link {
+            border-color: #dee2e6;
+        }
+    </style>
+}
+
+<h1>Organization List</h1>
+<div class="mt-3">
+    <div class="row mx-0 top mb-2">
+        <div class="col-md-3 d-flex align-items-center action">
+            <div class="form-group form-check d-flex align-items-center mb-0">
+                <input type="checkbox" class="form-check-input" id="cbIncludeInActive">
+                <label class="form-check-label" for="cbIncludeInActive">Include In-active</label>
+            </div>
+        </div>
+    </div>
+    <div>
+        <table class="table table-bordered" id="table-oganization">
+            <thead>
+                <tr>
+                    <th>Organization Name</th>
+                    <th>Description</th>
+                    <th>Role</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div class="pagination justify-content-end align-items-center p-1">
+            <button class="page-item border-0 bg-white disabled" id="btnFirstPage"><i class="fas fa-angle-double-left"></i></button>
+            <button class="page-item border-0 bg-white disabled" id="btnPrevPage"><i class="fas fa-angle-left"></i></button>
+            <div class="vertical-divided"></div>
+            Page
+            <input class="txt-pageNumber" value="1" />
+            of
+            <span class=" ml-2 totalPage">1</span>
+            <div class="vertical-divided"></div>
+            <button class="page-item border-0 bg-white" id="btnNextPage"><i class="fas fa-angle-right"></i></button>
+            <button class="page-item border-0 bg-white" id="btnLastPage"><i class="fas fa-angle-double-right"></i></button>
+        </div>
+    </div>
+</div>
+
+@section modal{
+    <div class="modal fade" id="listRoleModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" style="max-width:820px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="listRole">Change Roles of Organisaton</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered" id="table-role">
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="form-group d-flex flex-row-reverse">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                        <input type="button" value="OK" class="btn btn-outline-secondary" id="changeRole" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts{
+    <script src="~/js/organization/list.js"></script>
+
+    <script>
+        var organization = new organizationController();
+        organization.initializer();
+    </script>
+}

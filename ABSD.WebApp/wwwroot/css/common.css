@@ -1,0 +1,7 @@
+﻿.custom-btn {
+    border: 1px solid #e4e4e4;
+    padding: 0.125rem 1rem;
+    background: linear-gradient( 0deg, #dcdcdc, #ffffff00);
+    font-size: .875rem;
+    margin-right: 1rem;
+}
